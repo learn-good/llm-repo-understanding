@@ -1,6 +1,6 @@
 # Using LLMs to learn about repos
 
-This is an attempt to generate a 
+This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of the filetree: leaf nodes (files) and subtrees are summarized first, before creating a summary of the parent. After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API.
 
 # How to use
 
@@ -67,3 +67,8 @@ This is an attempt to generate a
 # Test with
 - manim
 - entropix
+
+#### Note `inputs` are for input repos (should be added to .gitignore for space)
+#### `outputs` can be tracked
+
+#### TODO experiment with README.md in vs out
