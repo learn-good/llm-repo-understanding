@@ -11,7 +11,7 @@ After one pass enriching the file tree with relevant information, attempt to sum
 ## Step 1 (Optional): Place your target repo in this directory
 Place the target repo (the repo you want to learn more about) into this directory, e.g. `./inputs/{repo_name}`. Outputs will go to `./outputs/{repo_name}/some_output` by default.
 
-You may also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo.
+You may also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo, `videos`.
 
 ## Step 2: Get an XML filetree (xmlft) of the repo
 Run `python generate_xml_filetree.py -i repo_path` to create an XML representation of your repository's file structure. It respects .gitignore patterns and identifies binary files. 

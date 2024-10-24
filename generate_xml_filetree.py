@@ -126,9 +126,9 @@ def add_directory_to_xml(root_element, current_path, ignore_patterns, repo_root)
             ET.SubElement(root_element, 'file', attributes)
 
 
-def generate_xml_tree(input_filepath=".",
-                      use_gitignore=True,
-                      output_filepath=None, output_minified=False, output_indent=2):
+def generate_xml_tree(input_filepath=".", use_gitignore=True,
+                      output_filepath=None, output_minified=False, 
+                      output_indent=2, output_overwrite=False):
     """
     Generate an XML tree representation of the repository at repo_path,
     excluding files and directories specified in the .gitignore file.
@@ -147,10 +147,14 @@ def generate_xml_tree(input_filepath=".",
     repo_name = os.path.basename(input_filepath)
 
     # Create outputs directory if it doesn't exist
-    if output_filepath is None:
+    if output_filepath is None: # use default output dir
         outputs_dir = os.path.join('outputs', repo_name)
         os.makedirs(outputs_dir, exist_ok=True)
         output_filepath = os.path.join(outputs_dir, 'filetree.xml')
+    else: # use given output dir
+        output_dir = os.path.dirname(output_filepath)
+        if output_dir:  # Only create if there's actually a directory path
+            os.makedirs(output_dir, exist_ok=True)
 
     # Ignore patterns using .gitignore
     if use_gitignore:
@@ -190,6 +194,12 @@ def generate_xml_tree(input_filepath=".",
     else:
         pass  # No action needed, default output is minified
 
+    
+    if os.path.exists(output_filepath) and not output_overwrite:
+        raise FileExistsError(
+            f"Output file '{output_filepath}' already exists. Use --overwrite to force overwrite."
+        )
+    
     # Write the tree to a file with XML declaration
     xml_tree.write(output_filepath, encoding='utf-8', xml_declaration=False)
     print(f"XML tree has been saved to {output_filepath}")
@@ -221,6 +231,10 @@ def parse_arguments():
                       action='store_true',
                       help='Do not respect .gitignore patterns for creating the filetree')
     
+    parser.add_argument('--overwrite',
+                      action='store_true',
+                      help='Overwrite output file if it exists')
+    
     args = parser.parse_args()
     
     # Validate tab size
@@ -235,11 +249,12 @@ def main():
     
     # Generate XML tree with provided arguments
     generate_xml_tree(
-        input_filepath  = args.input,
-        use_gitignore   = not args.no_ignore,
-        output_filepath = args.output,
-        output_minified = args.minified,
-        output_indent   = args.tab_size
+        input_filepath   = args.input,
+        use_gitignore    = not args.no_ignore,
+        output_filepath  = args.output,
+        output_minified  = args.minified,
+        output_indent    = args.tab_size,
+        output_overwrite = args.overwrite
     )
 
 if __name__ == "__main__":
