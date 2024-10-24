@@ -13,7 +13,7 @@ Place the target repo (the repo you want to learn more about) into this director
 
 You may also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo, `videos`.
 
-## Step 2: Get an XML filetree (xmlft) of the repo
+## Step 2: Get an XML filetree of the repo
 Run `python generate_xml_filetree.py -i repo_path` to create an XML representation of your repository's file structure. It respects .gitignore patterns and identifies binary files. 
 
 > [!TIP] 
@@ -33,6 +33,8 @@ Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to
 
 Example output:
 ```
+$ python get_input_tokens_info.py -d inputs/manim -f outputs/manim/filetree.xml
+
 === Statistics ===
 Total files: 233
 Total directories: 54
