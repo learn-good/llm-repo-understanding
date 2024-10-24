@@ -2,7 +2,7 @@
 
 This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of the filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
 
-After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or as a textual narrative overview of the repo. (TODO later: potentially include second pass later prior to repo summary)
+After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or as a textual narrative overview of the repo. *(TODO later: potentially include second pass later prior to repo summary)*
 
 # How to use
 
@@ -14,14 +14,14 @@ Run `python generate_xml_filetree.py -i repo_path` to create an XML representati
 
 #### Basic usage
 ```
-# Uses current directory, By default, output is saved to ./outputs/{repo_name}/filetree.xml.
+# By default, input path is cwd (".'), output is saved to ./outputs/{repo_name}/filetree.xml
 python generate_xml_filetree.py 
 
-# Custom input/output paths. 
+# Custom input/output paths
 python generate_xml_filetree.py -i /path/to/repo -o output.xml
 ```
 
-## Step 2: inspect and edit output of step 1
+## Step 2: Inspect and edit output of step 1
 - Make sure everything that is in the output file tree are things you want to learn about
   - Will cost tokens to process, so you want to make sure you're not reading in things like SVGs, PNGs, low info subdirectories, etc.
   - Either delete parts of the tree to remove the sections entirely from the final output, or add `inspected="false"` to files and directories that we do not want to summarize, but want to keep in the skeleton for summarization later.
