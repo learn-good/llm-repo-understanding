@@ -9,7 +9,7 @@ After one pass enriching the file tree with relevant information, attempt to sum
 ## *(TODO requirements.txt)*
 
 ## Step 1 (Optional): Place your target repo in this directory
-Place the target repo (the repo you want to learn more about) into this directory, e.g. `./inputs/{repo_name}`. Outputs will go to `./outputs/{repo_name}/some_output` by default.
+Place the target repo (the repo you want to learn more about) into this directory, e.g. `./inputs/{repo_name}`. Outputs will go to `./outputs/{repo_name}/some_output` by default. This step is optional because you can just point to the repo as an input argument, but this is just an organizational suggestion. 
 
 You may also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo, `videos`.
 
@@ -28,31 +28,47 @@ python generate_xml_filetree.py
 python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
 ```
 
-## Step 3: Inspect and edit your filetree
+## Step 3: Collect stats on, inspect, and edit your XML filetree
+Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the filetree, such as token count, file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the filetree or are not text readable.
+
+Example output:
+```
+=== Statistics ===
+Total files: 233
+Total directories: 54
+Total file content tokens: 785021
+
+Token Statistics:
+Mean tokens per file: 3369.19
+Median tokens per file: 977
+Max tokens: 39764
+
+=== Largeset Files (by token count) ===
+39,764 tokens: inputs/manim/videos/_2024/holograms/diffraction.py
+37,090 tokens: inputs/manim/videos/_2024/transformers/attention.py
+30,554 tokens: inputs/manim/videos/_2023/clt/main.py
+26,101 tokens: inputs/manim/videos/_2024/transformers/embedding.py
+24,330 tokens: inputs/manim/videos/_2024/transformers/mlp.py
+
+File type distribution:
+  .py: 166 files
+  .glsl: 30 files
+  .rst: 17 files
+...
+```
+
 Make sure all entries in the output filetree are things you want to read and summarized by the LLM. You can exclude subdirectories or files perceived to be of low informational value to save a bit of expense.
 
-Manually delete parts of the filetree.xml to completely exclude the files or directories from the final output, or add the `ignore` keyword to files and directories that you do not wish to summarize, but want to keep in the filetree skeleton for the overall repo summarization (e.g., `<directory name="somedir" ignore>` will ignore the `path/to/somedir` directory and comprising subdirectories and files when summarizing individual files and directories, but the final repo summarization step will be able to see that those files exist in the filetree).
+Manually delete parts of the filetree.xml to completely exclude the files or directories from the final output, or add `ignore="true"` to files and directories that you do not wish to summarize, but want to keep in the filetree skeleton for the overall repo summarization (e.g., `<directory name="somedir" ignore="true">` will ignore the `path/to/somedir` directory and comprising subdirectories and files when summarizing individual files and directories, but the final repo summarization step will be able to see that those files exist in the filetree). `get_input_tokens_info.py` will also ignore files with `ignore="true"` for counting.
+
+## Step 4: Enrich the filetree with file and directory summaries
+
+DFS
+run `python enrich_xml_filetree.py` to perform a depth first traversal over the repo 
 
 
 
-
-
-## Step 4: run `python xmlft_tokens_info.py` to get information about what the next step will look like
-- Assume everything (filename + file contents) is read exactly once, call that the lower bound for input tokens (ignore `ignore` files and directories)
-- Use tiktoken library to get token count of (all filenames + all file contents)
-- Should also report/warn of individual files that have exceeded certain token size thresholds (May result in error or have otherwise outlier behavior. Make sure it fits in your chosen LLM's context window and consider that the LLM may keep the output short and avoid reproducing the appropriate level of detail for these larger files. Maybe someone will come up with a good way to navigate these?)
-  - 8K, 16K, 32K, 64K, 128K
-- Also warn for very large directories (like >50) because these will also cause many summaries need to be concatenated into an input message for the directory summarization step.
-- Give distribution (histogram) of file input tokens
-- Give filename extension count, total n_files and n_directories
-- Give estimated lower bound input in terms of millions of tokens, warn that 
-
-
-
-
-
-## Step 5: run `python enrich_xml_filetree.py` to perform a depth first traversal over the repo 
-- This will summarize the files in the directory first, and then use those summaries to characterize the directory. (make sure `ignore` property is respected)
+- This will summarize the files in the directory first, and then use those summaries to characterize the directory. (make sure `ignore="true"` property is respected)
   - Files in the same dir can get processed together ASYNC
   - (Optional arg): `--gen-readme` to generate README.md in each of the sub repos. If the root or any other dir already has a README.md, generate README2.md
 - Files get summarized by: (all of these are "minimal" in the sense that if they are not there, don't include empty tags. LLM can do it for regularity, but they should be parsed out in later pass)
@@ -105,3 +121,5 @@ Manually delete parts of the filetree.xml to completely exclude the files or dir
 ## TODO for speech generation, add "cues", which will be special xml that is parsed before TTS, to 
 ## indicate a time a certain section starts. Hopefully with timing info from the TTS response (elevenlabs has this at a character or phoneme level), we can create/sync video to it
 - If not this way maybe lossy translation back from speech to text with timestamps to find/insert cues for scene change
+
+## TODO - add inputs/example input dir and outputs/example run and 
