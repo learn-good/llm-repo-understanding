@@ -6,8 +6,8 @@ After one pass enriching the file tree with relevant information, attempt to sum
 
 # How to use
 
-## Step 1: run `python generate_xml_filetree.py` to get the XML filetree (xmlft) of the repo
-Creates an XML representation of your repository's file structure. It respects .gitignore patterns and identifies binary files. 
+## Step 1: Get an XML filetree (xmlft) of the repo
+Run `python generate_xml_filetree.py -i repo_path` to create an XML representation of your repository's file structure. It respects .gitignore patterns and identifies binary files. 
 
 > [!TIP] 
 > Use `python generate_xml_filetree.py -h` for available options.
@@ -16,6 +16,7 @@ Creates an XML representation of your repository's file structure. It respects .
 ```
 # Uses current directory, By default, output is saved to ./outputs/{repo_name}/filetree.xml.
 python filetree_generator.py 
+
 # Custom input/output paths. 
 python filetree_generator.py -i /path/to/repo -o output.xml
 ```
