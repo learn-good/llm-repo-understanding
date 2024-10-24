@@ -6,7 +6,14 @@ After one pass enriching the file tree with relevant information, attempt to sum
 
 # How to use
 
-## Step 1: Get an XML filetree (xmlft) of the repo
+## *(TODO requirements.txt)*
+
+## Step 1 (Optional): Place your target repo in this directory
+Place the target repo (the repo you want to learn more about) into this directory, e.g. `./inputs/{repo_name}`. Outputs will go to `./outputs/{repo_name}/some_output` by default.
+
+You may also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo.
+
+## Step 2: Get an XML filetree (xmlft) of the repo
 Run `python generate_xml_filetree.py -i repo_path` to create an XML representation of your repository's file structure. It respects .gitignore patterns and identifies binary files. 
 
 > [!TIP] 
@@ -18,17 +25,19 @@ Run `python generate_xml_filetree.py -i repo_path` to create an XML representati
 python generate_xml_filetree.py 
 
 # Custom input/output paths
-python generate_xml_filetree.py -i /path/to/repo -o output.xml
+python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
 ```
 
-## Step 2: Inspect and edit output of step 1
-- Make sure everything that is in the output file tree are things you want to learn about
-  - Will cost tokens to process, so you want to make sure you're not reading in things like SVGs, PNGs, low info subdirectories, etc.
-  - Either delete parts of the tree to remove the sections entirely from the final output, or add `inspected="false"` to files and directories that we do not want to summarize, but want to keep in the skeleton for summarization later.
-  - You might also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo.
+## Step 3: Inspect and edit your filetree
+Make sure everything that is in the output file tree are things you want to learn about. Input files will cost tokens to process, so you can exclude low info subdirectories or files (if you know ahead of time they won't be of interest).
 
-## Step 3: run `python xmlft_tokens_info.py` to get information about what the next step will look like
-- Assume everything (filename + file contents) is read exactly once, call that the lower bound for input tokens (ignore `inspected="false"` files and directories)
+Manually delete parts of the filetree.xml to remove the files or firs entirely from the final output, or add the `ignore` keyword to files and directories that we do not want to summarize, but want to keep in the skeleton for summarization or documentation purposes (e.g. `<directory name="svg" ignore>`).
+
+
+
+
+## Step 4: run `python xmlft_tokens_info.py` to get information about what the next step will look like
+- Assume everything (filename + file contents) is read exactly once, call that the lower bound for input tokens (ignore `ignore` files and directories)
 - Use tiktoken library to get token count of (all filenames + all file contents)
 - Should also report/warn of individual files that have exceeded certain token size thresholds (May result in error or have otherwise outlier behavior. Make sure it fits in your chosen LLM's context window and consider that the LLM may keep the output short and avoid reproducing the appropriate level of detail for these larger files. Maybe someone will come up with a good way to navigate these?)
   - 8K, 16K, 32K, 64K, 128K
@@ -37,8 +46,12 @@ python generate_xml_filetree.py -i /path/to/repo -o output.xml
 - Give filename extension count, total n_files and n_directories
 - Give estimated lower bound input in terms of millions of tokens, warn that 
 
-## Step 4: run `python enrich_xml_filetree.py` to perform a depth first traversal over the repo 
-- This will summarize the files in the directory first, and then use those summaries to characterize the directory. (make sure `inspected="false"` property is respected)
+
+
+
+
+## Step 5: run `python enrich_xml_filetree.py` to perform a depth first traversal over the repo 
+- This will summarize the files in the directory first, and then use those summaries to characterize the directory. (make sure `ignore` property is respected)
   - Files in the same dir can get processed together ASYNC
   - (Optional arg): `--gen-readme` to generate README.md in each of the sub repos. If the root or any other dir already has a README.md, generate README2.md
 - Files get summarized by: (all of these are "minimal" in the sense that if they are not there, don't include empty tags. LLM can do it for regularity, but they should be parsed out in later pass)
@@ -60,10 +73,10 @@ python generate_xml_filetree.py -i /path/to/repo -o output.xml
   - notes / caution (Give a short gist of what the file is and what it does. Is there anything to be aware of, potential problems, stated and unstated assumptions or expectations?)
 - Repo gets summarized by feeding its files XMLs as contextual input.
 
-## Step 4b?: run `python second_pass_enrich_xml_filetree.py` (optional, might skip this for now)
+## Step 5b?: run `python second_pass_enrich_xml_filetree.py` (optional, might skip this for now)
 - more detail
 
-## Step 5: run `python generate_repo_explanation.py`
+## Step 6: run `python generate_repo_explanation.py`
 - Output Options: `script` ("read aloud") for a voice API or `markdown`
   - Need 2 diff prompts, output parsers and handlers for this
 - **User should be able to give custom instructions at this step**. You might care about a specific use case, have a particular end goal, or want to specify your current understanding, etc., so you should be able to tailor the output if you choose.
@@ -78,13 +91,8 @@ python generate_xml_filetree.py -i /path/to/repo -o output.xml
 - manim
 - entropix
 
-#### Input structure
-inputs
-- repository
-  - media
-  - filetree
-  - metadata? stars, URL, date, etc.
 
+---------
 
 #### Note `inputs` are for input repos (should be added to .gitignore for space)
 #### `outputs` can be tracked
