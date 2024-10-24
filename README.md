@@ -15,10 +15,10 @@ Run `python generate_xml_filetree.py -i repo_path` to create an XML representati
 #### Basic usage
 ```
 # Uses current directory, By default, output is saved to ./outputs/{repo_name}/filetree.xml.
-python filetree_generator.py 
+python generate_xml_filetree.py 
 
 # Custom input/output paths. 
-python filetree_generator.py -i /path/to/repo -o output.xml
+python generate_xml_filetree.py -i /path/to/repo -o output.xml
 ```
 
 ## Step 2: inspect and edit output of step 1
