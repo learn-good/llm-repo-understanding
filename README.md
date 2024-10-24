@@ -29,9 +29,10 @@ python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
 ```
 
 ## Step 3: Inspect and edit your filetree
-Make sure everything that is in the output file tree are things you want to learn about. Input files will cost tokens to process, so you can exclude low info subdirectories or files (if you know ahead of time they won't be of interest).
+Make sure all entries in the output filetree are things you want to read and summarized by the LLM. You can exclude subdirectories or files perceived to be of low informational value to save a bit of expense.
 
-Manually delete parts of the filetree.xml to remove the files or firs entirely from the final output, or add the `ignore` keyword to files and directories that we do not want to summarize, but want to keep in the skeleton for summarization or documentation purposes (e.g. `<directory name="svg" ignore>`).
+Manually delete parts of the filetree.xml to completely exclude the files or directories from the final output, or add the `ignore` keyword to files and directories that you do not wish to summarize, but want to keep in the filetree skeleton for the overall repo summarization (e.g., `<directory name="somedir" ignore>` will ignore the `path/to/somedir` directory and comprising subdirectories and files when summarizing individual files and directories, but the final repo summarization step will be able to see that those files exist in the filetree).
+
 
 
 

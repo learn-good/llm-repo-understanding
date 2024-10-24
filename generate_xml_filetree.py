@@ -141,7 +141,6 @@ def generate_xml_tree(input_filepath=".", use_gitignore=True,
     - output_indent:   Number of spaces to use for indentation. Default is 2.
                        If minified is True, indent is ignored.
     """
-
     # Get the repository name from the path, if repo_name is empty (in case of '.'), use 'root'
     input_filepath = os.path.abspath(input_filepath)
     repo_name = os.path.basename(input_filepath)
@@ -194,11 +193,18 @@ def generate_xml_tree(input_filepath=".", use_gitignore=True,
     else:
         pass  # No action needed, default output is minified
 
-    
-    if os.path.exists(output_filepath) and not output_overwrite:
-        raise FileExistsError(
-            f"Output file '{output_filepath}' already exists. Use --overwrite to force overwrite."
-        )
+    # Check if user meant to overwrite
+    if os.path.exists(output_filepath):
+        if not output_overwrite:
+            while True:
+                response = input(f"Output file '{output_filepath}' already exists. Overwrite? (y/n): ").lower()
+                if response in ['yes', 'y']:
+                    break
+                elif response in ['no', 'n']:
+                    print("Operation cancelled.")
+                    return
+                else:
+                    print("Please answer 'yes/y' to overwrite or 'no/n' to cancel.")
     
     # Write the tree to a file with XML declaration
     xml_tree.write(output_filepath, encoding='utf-8', xml_declaration=False)
