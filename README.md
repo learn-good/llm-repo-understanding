@@ -11,7 +11,7 @@ After one pass enriching the file tree with relevant information, attempt to sum
 # How to use
 Make sure you have requirements installed (`pip install -r requirements.txt`)
 
-## Step 1 (Optional): Add Target Repository
+## Step 1: Add Target Repository (Optional)
 Place the repository you want to analyze in `./inputs/{repo_name}`. Results will be saved to `./outputs/{repo_name}/` by default.
 
 You can add example files to the target repository if:
