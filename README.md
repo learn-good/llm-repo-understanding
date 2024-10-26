@@ -6,13 +6,13 @@
 
 This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of a repository's filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
 
-After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or used as a textual narrative overview of the repo. 
+After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will be structured markdown, or "speech" form, which can serve as input to a text-to-speech API or used to provide a textual narrative overview of the repo. 
 
 # How to use
 Make sure you have requirements installed (`pip install -r requirements.txt`)
 
 ## Step 1 (Optional): Add Target Repository
-Place the repository you want to analyze in `./inputs/{repo_name}`. You can alternatively specify the repository path directly as an input argument. Results will be saved to `./outputs/{repo_name}/`. 
+Place the repository you want to analyze in `./inputs/{repo_name}`. You can alternatively specify the repository path directly as an input argument. Results will be saved to `./outputs/{repo_name}/` by default.
 
 You can add example files to the target repository if:
 - The repository lacks examples
@@ -31,6 +31,26 @@ python generate_xml_filetree.py
 
 # Custom input/output paths
 python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
+```
+
+#### Example Output
+html ```
+<repository name="llm-repo-understanding">
+  <file name="LICENSE" />
+  <file name="README.md" />
+  <file name="enrich_filetree.py" />
+  <file name="generate_xml_filetree.py" />
+  <file name="get_input_tokens_info.py" />
+  <directory name="outputs">
+    <directory name="llm-repo-understanding">
+      <file name="filetree.xml" />
+    </directory>
+    <directory name="manim">
+      <file name="filetree.xml" />
+    </directory>
+  </directory>
+  <file name="requirements.txt" />
+</repository>
 ```
 
 ## Step 3: Collect stats on, inspect, and edit your XML filetree
@@ -82,7 +102,7 @@ This helps reduce processing costs by focusing on relevant content.
 
 
 
-
+------------
 
 ## Step 4: Enrich the filetree with file and directory summaries
 DFS traversal over filetree:
@@ -178,7 +198,7 @@ run `python enrich_xml_filetree.py` to perform a depth first traversal over the 
 
 
 
-
+------------
 
 
 ## Step 5: run `python generate_repo_explanation.py`

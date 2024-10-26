@@ -77,7 +77,7 @@ def traverse_xml(element, current_path, stats, thresholds, encoding):
         for child in element:
             traverse_xml(child, dir_path, stats, thresholds, encoding)
 
-def main():
+def parse_arguments():
     parser = argparse.ArgumentParser(description='Get information about the XML filetree.')
     parser.add_argument('-f', '--filetree-path', required=True,
                         help='Path to the XML filetree file.')
@@ -91,6 +91,10 @@ def main():
     parser.add_argument('--encoding-name', default='o200k_base',
                         help='The tiktoken encoding name to use for tokenization (default: o200k_base).')
     args = parser.parse_args()
+    return args
+
+def main():
+    args = parse_arguments()
 
     if not os.path.exists(args.filetree_path):
         print(f"XML file '{args.filetree_path}' does not exist.")
