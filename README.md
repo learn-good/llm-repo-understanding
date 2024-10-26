@@ -54,7 +54,7 @@ python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
 ```
 
 ## Step 3: Collect stats on, inspect, and edit your XML filetree
-Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the filetree, such as token count (using `tiktoken` with `o200k_base` encoding), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the filetree or are not text readable.
+Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the filetree, such as token count (using `tiktoken` with `o200k_base` encoding), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the filetree. It also ignores counts for non-text-readable files.
 
 Example output:
 ```
