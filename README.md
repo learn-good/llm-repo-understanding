@@ -1,27 +1,32 @@
 # Using LLMs to learn about repos
 
+!["I must aquire it! That esoteric art form"](media/dandadan_meme.png)
+*It won't be easy, but it'll be worth it*
+
 This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of the filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
 
-After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or as a textual narrative overview of the repo. *(TODO later: potentially include second pass later prior to repo summary)*
+After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or as a textual narrative overview of the repo. 
 
 # How to use
 
 ## *(TODO requirements.txt)*
 
-## Step 1 (Optional): Place your target repo in this directory
-Place the target repo (the repo you want to learn more about) into this directory, e.g. `./inputs/{repo_name}`. Outputs will go to `./outputs/{repo_name}/some_output` by default. This step is optional because you can just point to the repo as an input argument, but this is just an organizational suggestion. 
+## Step 1 (Optional): Add Target Repository
+Place the repository you want to analyze in `./inputs/{repo_name}`. You can alternatively specify the repository path directly as an input argument. Results will be saved to `./outputs/{repo_name}/`. 
 
-You may also want to drop (hopefully working) examples into the target repo, if they don't have it already, or if you want to provide additional examples. For `manim` I dropped videos from the 3b1b channel videos repo, `videos`.
+You can add example files to the target repository if:
+- The repository lacks examples
+- You want to include additional examples
 
 ## Step 2: Get an XML filetree of the repo
-Run `python generate_xml_filetree.py -i repo_path` to create an XML representation of your repository's file structure. It respects .gitignore patterns and identifies binary files. 
+Run `python generate_xml_filetree.py -i repo_path` to create an XML filetree representation of your repository's file structure. It respects .gitignore patterns by default. 
 
 > [!TIP] 
 > Use `python generate_xml_filetree.py -h` for available options.
 
 #### Basic usage
 ```
-# By default, input path is cwd (".'), output is saved to ./outputs/{repo_name}/filetree.xml
+# By default, input path is cwd ("."), output is saved to ./outputs/{repo_name}/filetree.xml
 python generate_xml_filetree.py 
 
 # Custom input/output paths
@@ -29,7 +34,7 @@ python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
 ```
 
 ## Step 3: Collect stats on, inspect, and edit your XML filetree
-Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the filetree, such as token count, file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the filetree or are not text readable.
+Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the filetree, such as token count (using `tiktoken` with `o200k_base` encoding), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the filetree or are not text readable.
 
 Example output:
 ```
@@ -59,15 +64,36 @@ File type distribution:
 ...
 ```
 
-Make sure all entries in the output filetree are things you want to read and summarized by the LLM. You can exclude subdirectories or files perceived to be of low informational value to save a bit of expense.
+#### Customize File Selection
+Review the output filetree and remove or mark files you don't want analyzed. There are two ways to exclude content:
 
-Manually delete parts of the filetree.xml to completely exclude the files or directories from the final output, or add `ignore="true"` to files and directories that you do not wish to summarize, but want to keep in the filetree skeleton for the overall repo summarization (e.g., `<directory name="somedir" ignore="true">` will ignore the `path/to/somedir` directory and comprising subdirectories and files when summarizing individual files and directories, but the final repo summarization step will be able to see that those files exist in the filetree). `get_input_tokens_info.py` will also ignore files with `ignore="true"` for counting.
+1. **Complete Removal**
+   - Delete entries from filetree.xml to fully exclude them
+   - Files won't appear in any summaries
+
+2. **Partial Exclusion**
+   - Add `ignore="true"` to entries you want to skip but keep visible
+   - Example: `<directory name="somedir" ignore="true">`
+   - Ignored items won't be summarized individually
+   - Ignored items will still appear in the overall repo structure
+   - `get_input_tokens_info.py` will skip ignored items
+
+This helps reduce processing costs by focusing on relevant content.
 
 ## Step 4: Enrich the filetree with file and directory summaries
 DFS traversal over filetree:
 - Make a copy of the filetree called `enriched_filetree`
-- Whenever a file is sumarized, you can write out its contents to replace <file name=ex >  for the original filetree (use `enriched_filetree`)
-- Whenever all the descendants of a directory are summarized, they get the 
+- Whenever a file is sumarized, you can write out its contents to replace <file name=ex />  for the original filetree (use `enriched_filetree`)
+- Whenever all the descendants of a directory are summarized, the containg directory gets summarized in
+<directory name="custom_commands">
+    <directory-summary>
+        <!-- Describe what this directory and containing files accomplishes, how these should be used, etc -->
+    </directory-summary>
+    <file name="ManimCheckpointPaste.sublime-commands" />
+    ...
+    <file name="manim_plugins.py" />
+</directory>
+(this one is an append inside rather that a total replace)
 
 **TODO** decide what the prompt is for a leaf
 - feed in filetree skeleton
@@ -107,6 +133,8 @@ DFS traversal over filetree:
         </function>
     </function-defs>
     <file-summary>
+        <!-- If file is not code, but instead just plaintext, this is the only section needed -->
+        <!-- Also need to be present for code files, too -->
     </file-summary>
 </file>
 
@@ -140,8 +168,7 @@ run `python enrich_xml_filetree.py` to perform a depth first traversal over the 
   - notes / caution (Give a short gist of what the file is and what it does. Is there anything to be aware of, potential problems, stated and unstated assumptions or expectations?)
 - Repo gets summarized by feeding its files XMLs as contextual input.
 
-## Step 5b?: run `python second_pass_enrich_xml_filetree.py` (optional, might skip this for now)
-- more detail
+
 
 ## Step 6: run `python generate_repo_explanation.py`
 - Output Options: `script` ("read aloud") for a voice API or `markdown`
@@ -154,22 +181,3 @@ run `python enrich_xml_filetree.py` to perform a depth first traversal over the 
   - Setup: Any requirements.txt? Does it require any env variables to be set? Any dependencies? Any operating system specific requirements? Make sure the setup steps are straighforward and spelled out.
   - Practical application: What can I do with this repo now? If there is examples in the repo already, mention where they are, and describe them. Give one instructive example in detail.
 
-# Test with
-- manim
-- entropix
-- sakana's AI Researcher repo
-
----------
-
-#### Note `inputs` are for input repos (should be added to .gitignore for space)
-#### `outputs` can be tracked
-
-#### TODO experiment with README.md in vs out
-
-#### TODO how to setup split tests for prompt variations, different combos of underlying models, etc.
-
-## TODO for speech generation, add "cues", which will be special xml that is parsed before TTS, to 
-## indicate a time a certain section starts. Hopefully with timing info from the TTS response (elevenlabs has this at a character or phoneme level), we can create/sync video to it
-- If not this way maybe lossy translation back from speech to text with timestamps to find/insert cues for scene change
-
-## TODO - add inputs/example input dir and outputs/example run and 
