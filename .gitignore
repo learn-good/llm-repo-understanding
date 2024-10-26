@@ -1,5 +1,9 @@
-inputs
-!/inputs/example
-outputs
-!/outputs/example
+/inputs/*
+!/inputs/example/
+!/inputs/prompts/
+!/inputs/prompts/*
+
+/outputs/*
+!/outputs/example/
+
 .DS_Store

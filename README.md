@@ -64,10 +64,58 @@ Make sure all entries in the output filetree are things you want to read and sum
 Manually delete parts of the filetree.xml to completely exclude the files or directories from the final output, or add `ignore="true"` to files and directories that you do not wish to summarize, but want to keep in the filetree skeleton for the overall repo summarization (e.g., `<directory name="somedir" ignore="true">` will ignore the `path/to/somedir` directory and comprising subdirectories and files when summarizing individual files and directories, but the final repo summarization step will be able to see that those files exist in the filetree). `get_input_tokens_info.py` will also ignore files with `ignore="true"` for counting.
 
 ## Step 4: Enrich the filetree with file and directory summaries
+DFS traversal over filetree:
+- Make a copy of the filetree called `enriched_filetree`
+- Whenever a file is sumarized, you can write out its contents to replace <file name=ex >  for the original filetree (use `enriched_filetree`)
+- Whenever all the descendants of a directory are summarized, they get the 
 
-DFS
+**TODO** decide what the prompt is for a leaf
+- feed in filetree skeleton
+- feed in name of the repo
+- get formatted response
+<file name="example-file">
+    <declarations> 
+        <!-- declared variables and constants (at the file level, not scope to functions) -->
+    </declarations>
+    <dependencies>
+        <external> 
+            <!-- Dependencies that are not native to the repo -->
+        </external>
+        <internal> 
+            <!-- Dependencies that are not native to the repo -->
+        </internal>
+    </dependencies>
+    <function-defs>
+        <function name="The name should be the function signature, not just the name, e.g. `is_even(n: number) -> bool`">
+            <description>
+                <!-- Describe the function consicely -->
+            </description>
+            <args></args>
+            <returns></returns>
+            <side-effects>
+                <!-- any side effects outside the functions scope? -->
+            </side-effects>
+            <errors-and-exceptions>
+                <handled></handled>
+                <unhandled>
+                    <!-- errors that the code does not have error handling, but probably should -->
+                </unhandled>
+            </errors-and-exceptions>
+        </function>
+        <function name="some_other_fn(h) -> List[Dict]">
+            ...
+        </function>
+    </function-defs>
+    <file-summary>
+    </file-summary>
+</file>
+
+**TODO** decide what the prompt is for a parent
+- feed in completed subtree
+
+
 run `python enrich_xml_filetree.py` to perform a depth first traversal over the repo 
-
+- Optional arg: --batch (to save 50% with Anthropic. We'll just use Sonnet 3.5)
 
 
 - This will summarize the files in the directory first, and then use those summaries to characterize the directory. (make sure `ignore="true"` property is respected)
@@ -109,7 +157,7 @@ run `python enrich_xml_filetree.py` to perform a depth first traversal over the 
 # Test with
 - manim
 - entropix
-
+- sakana's AI Researcher repo
 
 ---------
 
