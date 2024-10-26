@@ -1,7 +1,7 @@
 # Using LLMs to learn about repos
 
 <p align="center">
-  <img src="path/to/your/image.jpg" alt="Alt text" width="300">
+  <img src="media/dandadan_meme.png" alt="Alt text" width="300">
   <br>
   <em>It won't be easy, but it'll be worth it</em>
 </p>
