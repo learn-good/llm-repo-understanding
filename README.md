@@ -25,12 +25,12 @@ Run `python generate_xml_filetree.py -i repo_path` to create an XML filetree rep
 > Use `python generate_xml_filetree.py -h` for available options.
 
 #### Basic usage
-```
+```python
 # By default, input path is cwd ("."), output is saved to ./outputs/{repo_name}/filetree.xml
 python generate_xml_filetree.py 
 
-# Custom input/output paths
-python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
+# Custom input path
+python generate_xml_filetree.py -i inputs/some_repo_name
 ```
 
 #### Example Output
