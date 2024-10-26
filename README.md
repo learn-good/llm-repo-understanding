@@ -19,7 +19,7 @@ You can add example files to the target repository if:
 - You want to include additional examples
 
 ## Step 2: Get an XML filetree of the repo
-Run `python generate_xml_filetree.py -i repo_path` to create an XML filetree representation of your repository's file structure. It respects .gitignore patterns by default. 
+Run `python generate_xml_filetree.py -i repo_path` to create an XML filetree (xmlft) representation of your repository's file structure. It respects .gitignore patterns by default. 
 
 > [!TIP] 
 > Use `python generate_xml_filetree.py -h` for available options.
@@ -54,7 +54,7 @@ python generate_xml_filetree.py -i inputs/some_repo_name
 ```
 
 ## Step 3: Collect stats on, inspect, and edit your XML filetree
-Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the filetree, such as token count (using `tiktoken` with `o200k_base` encoding), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the filetree. It also ignores counts for non-text-readable files.
+Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the xmlft, such as token count (using `tiktoken` with `o200k_base` encoding), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the xmlft. It also ignores counts for non-text-readable files.
 
 Example output:
 ```
@@ -85,19 +85,19 @@ File type distribution:
 ```
 
 #### Customize File Selection
-Review the output filetree and remove or mark files you don't want analyzed. There are two ways to exclude content:
+Review the xmlft and remove or mark files you don't want analyzed. There are two ways to exclude content:
 
 1. **Complete Removal**
-   - Delete entries from filetree.xml to fully exclude them
+   - Delete entries from `filetree.xml` to fully exclude them
    - Files won't appear in any summaries
 
 2. **Partial Exclusion**
    - Add `ignore="true"` to entries you want to skip but keep visible
    - Example: `<directory name="somedir" ignore="true">`
-   - Ignored items won't be summarized individually
+   - Ignored items won't be summarized individually by LLM
    - Ignored items will still appear in the overall repo structure
    - `get_input_tokens_info.py` will skip ignored items
 
-This helps reduce processing costs by focusing on relevant content.
+This helps reduce inference costs by focusing on relevant content.
 
 ## Step 4: Enrich the filetree with file and directory summaries

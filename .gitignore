@@ -2,6 +2,7 @@
 !/inputs/example
 !/inputs/example/*
 !/inputs/prompts
-!/inputs/prompts/summarize_file.txt
+!/inputs/prompts/*
 
 .DS_Store
+__pycache__

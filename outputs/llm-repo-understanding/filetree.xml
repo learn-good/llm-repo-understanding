@@ -1,11 +1,22 @@
 <repository name="llm-repo-understanding">
   <file name="LICENSE" />
   <file name="README.md" />
+  <file name="custom_logging.py" />
   <file name="enrich_filetree.py" />
   <file name="generate_xml_filetree.py" />
   <file name="get_input_tokens_info.py" />
+  <directory name="inputs">
+    <directory name="prompts">
+      <file name="summarize_directory.md" />
+      <file name="summarize_file.md" />
+    </directory>
+  </directory>
+  <directory name="media">
+    <file name="dandadan_sakata.png" text-readable="false" />
+  </directory>
   <directory name="outputs">
     <directory name="llm-repo-understanding">
+      <file name="enriched_filetree.xml" />
       <file name="filetree.xml" />
     </directory>
     <directory name="manim">
@@ -13,4 +24,5 @@
     </directory>
   </directory>
   <file name="requirements.txt" />
+  <file name="utils.py" />
 </repository>

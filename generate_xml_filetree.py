@@ -2,6 +2,7 @@
 import os
 import xml.etree.ElementTree as ET
 import fnmatch
+from utils import log
 
 def parse_gitignore(gitignore_path):
     """
@@ -22,32 +23,40 @@ def parse_gitignore(gitignore_path):
 def matches_pattern(path, patterns, repo_root):
     """
     Check if the given path matches any of the ignore patterns.
+    Handles negations properly by processing patterns in order.
     """
-    matched = False
-    # Get the path relative to repo_root, using OS-agnostic separator
     from_path_root = os.path.relpath(path, repo_root)
+    ignored = False
+    
     for pattern in patterns:
-        # Handle negation patterns starting with '!'
-        negated = pattern.startswith('!')
-        if negated:
+        # Handle negation patterns
+        is_negation = pattern.startswith('!')
+        if is_negation:
             pattern = pattern[1:]
-
+        
+        # Clean up pattern
         pattern = pattern.strip()
-
-        # Convert pattern to use OS-agnostic separators
         pattern = pattern.replace('/', os.sep).replace('\\', os.sep)
-
-        # Match path accordingly
-        if os.sep in pattern:
-            # Pattern has a separator, match from the repo root
+        
+        # For patterns starting with /, match from repo root
+        if pattern.startswith(os.sep):
+            pattern = pattern[1:]  # Remove leading slash
             match_path = from_path_root
         else:
-            # Match filename only
-            match_path = os.path.basename(path)
+            # For patterns without leading /, match against basename or relative path
+            if os.sep in pattern:
+                match_path = from_path_root
+            else:
+                match_path = os.path.basename(path)
+        
+        # Check if path matches pattern
+        matches = fnmatch.fnmatch(match_path, pattern)
+        
+        if matches:
+            ignored = not is_negation
+    
+    return ignored
 
-        if fnmatch.fnmatch(match_path, pattern):
-            matched = not negated  # Update matched status
-    return matched
 
 
 def is_text_file(file_path, sample_size=8192):
@@ -101,7 +110,7 @@ def add_directory_to_xml(root_element, current_path, ignore_patterns, repo_root)
         entries = os.listdir(current_path)
     except PermissionError as e:
         # Skip directories that can't be accessed
-        print(f"Permission error: {e}")
+        log.error(f"Permission error: {e}")
         return
 
     for entry in sorted(entries):

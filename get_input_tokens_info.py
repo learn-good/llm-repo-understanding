@@ -3,6 +3,7 @@ import os
 import argparse
 import xml.etree.ElementTree as ET
 import statistics
+from utils import log
 
 def is_ignored(element):
     """
@@ -54,7 +55,7 @@ def traverse_xml(element, current_path, stats, thresholds, encoding):
                     # Non-text-readable file
                     pass
             except Exception as e:
-                print(f"Error accessing file '{file_path}': {e}")
+                log.error(f"Error accessing file '{file_path}': {e}")
 
     elif element.tag == 'directory' or element.tag == 'repository':
         # Handle directories and the root 'repository' element
@@ -71,7 +72,7 @@ def traverse_xml(element, current_path, stats, thresholds, encoding):
         # Warn if directory has many items
         total_direct_items = num_direct_files + num_direct_dirs
         if total_direct_items > thresholds['dir_items_threshold']:
-            print(f"Warning: Directory '{dir_path}' has {total_direct_items} items (files/directories).")
+            log.warning(f"Directory '{dir_path}' has {total_direct_items} items (files/directories).")
 
         # Recursively traverse children
         for child in element:
@@ -97,18 +98,18 @@ def main():
     args = parse_arguments()
 
     if not os.path.exists(args.filetree_path):
-        print(f"XML file '{args.filetree_path}' does not exist.")
+        log.error(f"XML file '{args.filetree_path}' does not exist.")
         return
 
     if not os.path.isdir(args.directory):
-        print(f"Base directory '{args.directory}' does not exist or is not a directory.")
+        log.error(f"Base directory '{args.directory}' does not exist or is not a directory.")
         return
 
     # Initialize tiktoken encoding
     try:
         encoding = tiktoken.get_encoding(args.encoding_name)
     except Exception as e:
-        print(f"Error initializing tiktoken encoding '{args.encoding_name}': {e}")
+        log.error(f"Error initializing tiktoken encoding '{args.encoding_name}': {e}")
         return
 
     # Parse the XML filetree
