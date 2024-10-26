@@ -1,7 +1,11 @@
 # Using LLMs to learn about repos
 
-!["I must aquire it! That esoteric art form"](media/dandadan_meme.png)
-*It won't be easy, but it'll be worth it*
+<p align="center">
+  <img src="path/to/your/image.jpg" alt="Alt text" width="300">
+  <br>
+  <em>It won't be easy, but it'll be worth it</em>
+</p>
+
 
 This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of the filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
 
