@@ -34,7 +34,7 @@ python generate_xml_filetree.py -i /path/to/repo_name -o /path/to/out/ft.xml
 ```
 
 #### Example Output
-html ```
+```html
 <repository name="llm-repo-understanding">
   <file name="LICENSE" />
   <file name="README.md" />
