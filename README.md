@@ -1,19 +1,15 @@
 # Using LLMs to learn about repos
 
 <p align="center">
-  <img src="media/dandadan_meme.png" alt="Alt text" width="400">
-  <br>
-  <em>It won't be easy, but it'll be worth it</em>
+  <img src="media/dandadan_sakata.png" alt="Alt text" width="400">
 </p>
 
+This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of a repository's filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
 
-This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of the filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
-
-After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or as a textual narrative overview of the repo. 
+After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will use markdown, or "speech" form, which can serve as input to a text-to-speech API or used as a textual narrative overview of the repo. 
 
 # How to use
-
-## *(TODO requirements.txt)*
+Make sure you have requirements installed (`pip install -r requirements.txt`)
 
 ## Step 1 (Optional): Add Target Repository
 Place the repository you want to analyze in `./inputs/{repo_name}`. You can alternatively specify the repository path directly as an input argument. Results will be saved to `./outputs/{repo_name}/`. 
@@ -84,11 +80,17 @@ Review the output filetree and remove or mark files you don't want analyzed. The
 
 This helps reduce processing costs by focusing on relevant content.
 
+
+
+
+
 ## Step 4: Enrich the filetree with file and directory summaries
 DFS traversal over filetree:
-- Make a copy of the filetree called `enriched_filetree`
-- Whenever a file is sumarized, you can write out its contents to replace <file name=ex />  for the original filetree (use `enriched_filetree`)
+- Make a copy of the filetree called `enriched_filetree.xml`
+- Whenever a file is sumarized, you can write out its contents to replace a leaf  for the original filetree (use `enriched_filetree`)
 - Whenever all the descendants of a directory are summarized, the containg directory gets summarized in
+
+
 <directory name="custom_commands">
     <directory-summary>
         <!-- Describe what this directory and containing files accomplishes, how these should be used, etc -->
@@ -174,7 +176,12 @@ run `python enrich_xml_filetree.py` to perform a depth first traversal over the 
 
 
 
-## Step 6: run `python generate_repo_explanation.py`
+
+
+
+
+
+## Step 5: run `python generate_repo_explanation.py`
 - Output Options: `script` ("read aloud") for a voice API or `markdown`
   - Need 2 diff prompts, output parsers and handlers for this
 - **User should be able to give custom instructions at this step**. You might care about a specific use case, have a particular end goal, or want to specify your current understanding, etc., so you should be able to tailor the output if you choose.
