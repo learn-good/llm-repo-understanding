@@ -1,0 +1,351 @@
+<repository name="manim">
+  <file name="LICENSE.md" />
+  <file name="MANIFEST.in" />
+  <file name="README.md" />
+  <directory name="docs">
+    <file name="Makefile" />
+    <file name="example.py" />
+    <file name="make.bat" />
+    <file name="requirements.txt" />
+    <directory name="source">
+      <file name="conf.py" />
+      <directory name="development">
+        <file name="about.rst" />
+        <file name="changelog.rst" ignore="true"/>
+        <file name="contributing.rst" />
+      </directory>
+      <directory name="documentation">
+        <directory name="animation">
+          <file name="index.rst" />
+        </directory>
+        <directory name="camera">
+          <file name="index.rst" />
+        </directory>
+        <file name="constants.rst" />
+        <file name="custom_config.rst" />
+        <directory name="mobject">
+          <file name="index.rst" />
+        </directory>
+        <directory name="scene">
+          <file name="index.rst" />
+        </directory>
+        <directory name="shaders">
+          <file name="index.rst" />
+        </directory>
+        <directory name="utils">
+          <file name="index.rst" />
+        </directory>
+      </directory>
+      <directory name="getting_started">
+        <file name="configuration.rst" />
+        <file name="example_scenes.rst" />
+        <file name="installation.rst" />
+        <file name="quickstart.rst" />
+        <file name="structure.rst" />
+        <file name="whatsnew.rst" />
+      </directory>
+      <file name="index.rst" />
+      <file name="manim_example_ext.py" />
+    </directory>
+  </directory>
+  <file name="example_scenes.py" />
+  <directory name="logo">
+    <file name="cropped.png" text-readable="false" />
+    <file name="graph.png" text-readable="false" />
+    <file name="logo.py" />
+    <file name="transparent_graph.png" text-readable="false" />
+    <file name="white_with_name.png" text-readable="false" />
+    <file name="with_name.png" text-readable="false" />
+    <file name="with_subtext.png" text-readable="false" />
+  </directory>
+  <directory name="manimlib">
+    <file name="__init__.py" />
+    <file name="__main__.py" />
+    <directory name="animation">
+      <file name="__init__.py" />
+      <file name="animation.py" />
+      <file name="composition.py" />
+      <file name="creation.py" />
+      <file name="fading.py" />
+      <file name="growing.py" />
+      <file name="indication.py" />
+      <file name="movement.py" />
+      <file name="numbers.py" />
+      <file name="rotation.py" />
+      <file name="specialized.py" />
+      <file name="transform.py" />
+      <file name="transform_matching_parts.py" />
+      <file name="update.py" />
+    </directory>
+    <directory name="camera">
+      <file name="__init__.py" />
+      <file name="camera.py" />
+      <file name="camera_frame.py" />
+    </directory>
+    <file name="config.py" />
+    <file name="constants.py" />
+    <file name="default_config.yml" />
+    <directory name="event_handler">
+      <file name="__init__.py" />
+      <file name="event_dispatcher.py" />
+      <file name="event_listner.py" />
+      <file name="event_type.py" />
+    </directory>
+    <file name="extract_scene.py" />
+    <file name="logger.py" />
+    <directory name="mobject">
+      <file name="__init__.py" />
+      <file name="boolean_ops.py" />
+      <file name="changing.py" />
+      <file name="coordinate_systems.py" />
+      <file name="frame.py" />
+      <file name="functions.py" />
+      <file name="geometry.py" />
+      <file name="interactive.py" />
+      <file name="matrix.py" />
+      <file name="mobject.py" />
+      <file name="mobject_update_utils.py" />
+      <file name="number_line.py" />
+      <file name="numbers.py" />
+      <file name="probability.py" />
+      <file name="shape_matchers.py" />
+      <directory name="svg">
+        <file name="__init__.py" />
+        <file name="brace.py" />
+        <file name="drawings.py" />
+        <file name="old_tex_mobject.py" />
+        <file name="special_tex.py" />
+        <file name="string_mobject.py" />
+        <file name="svg_mobject.py" />
+        <file name="tex_mobject.py" />
+        <file name="text_mobject.py" />
+      </directory>
+      <file name="three_dimensions.py" />
+      <directory name="types">
+        <file name="__init__.py" />
+        <file name="dot_cloud.py" />
+        <file name="image_mobject.py" />
+        <file name="point_cloud_mobject.py" />
+        <file name="surface.py" />
+        <file name="vectorized_mobject.py" />
+      </directory>
+      <file name="value_tracker.py" />
+      <file name="vector_field.py" />
+    </directory>
+    <directory name="scene">
+      <file name="__init__.py" />
+      <file name="interactive_scene.py" />
+      <file name="scene.py" />
+      <file name="scene_file_writer.py" />
+    </directory>
+    <file name="shader_wrapper.py" />
+    <directory name="shaders">
+      <directory name="image">
+        <file name="frag.glsl" />
+        <file name="vert.glsl" />
+      </directory>
+      <directory name="inserts">
+        <file name="NOTE.md" />
+        <file name="complex_functions.glsl" />
+        <file name="emit_gl_Position.glsl" />
+        <file name="finalize_color.glsl" />
+        <file name="get_unit_normal.glsl" />
+        <file name="get_xyz_to_uv.glsl" />
+      </directory>
+      <directory name="mandelbrot_fractal">
+        <file name="frag.glsl" />
+        <file name="vert.glsl" />
+      </directory>
+      <directory name="newton_fractal">
+        <file name="frag.glsl" />
+        <file name="vert.glsl" />
+      </directory>
+      <directory name="quadratic_bezier">
+        <directory name="depth">
+          <file name="frag.glsl" />
+          <file name="geom.glsl" />
+          <file name="vert.glsl" />
+        </directory>
+        <directory name="fill">
+          <file name="frag.glsl" />
+          <file name="geom.glsl" />
+          <file name="vert.glsl" />
+        </directory>
+        <directory name="stroke">
+          <file name="frag.glsl" />
+          <file name="geom.glsl" />
+          <file name="vert.glsl" />
+        </directory>
+      </directory>
+      <file name="simple_vert.glsl" />
+      <directory name="surface">
+        <file name="frag.glsl" />
+        <file name="vert.glsl" />
+      </directory>
+      <directory name="textured_surface">
+        <file name="frag.glsl" />
+        <file name="vert.glsl" />
+      </directory>
+      <directory name="true_dot">
+        <file name="frag.glsl" />
+        <file name="geom.glsl" />
+        <file name="vert.glsl" />
+      </directory>
+    </directory>
+    <file name="tex_templates.yml" />
+    <file name="typing.py" />
+    <directory name="utils">
+      <file name="__init__.py" />
+      <file name="bezier.py" />
+      <file name="color.py" />
+      <file name="customization.py" />
+      <file name="debug.py" />
+      <file name="dict_ops.py" />
+      <file name="directories.py" />
+      <file name="family_ops.py" />
+      <file name="file_ops.py" />
+      <file name="images.py" />
+      <file name="init_config.py" />
+      <file name="iterables.py" />
+      <file name="paths.py" />
+      <file name="rate_functions.py" />
+      <file name="shaders.py" />
+      <file name="simple_functions.py" />
+      <file name="sounds.py" />
+      <file name="space_ops.py" />
+      <file name="tex.py" />
+      <file name="tex_file_writing.py" />
+      <file name="tex_to_symbol_count.py" />
+    </directory>
+    <file name="window.py" />
+  </directory>
+  <file name="pyproject.toml" />
+  <file name="requirements.txt" />
+  <file name="setup.cfg" />
+  <file name="setup.py" />
+  <directory name="videos">
+    <file name="LICENSE.txt" />
+    <file name="README.md" />
+    
+    <directory name="_2023">
+      <directory name="SoME3">
+        <file name="main.py" />
+      </directory>
+      <directory name="clt">
+        <file name="dice_sims.py" />
+        <file name="galton_board.py" />
+        <file name="main.py" />
+        <file name="wordy_scenes.py" />
+      </directory>
+      <directory name="clt_proof">
+        <file name="main.py" />
+      </directory>
+      <directory name="convolutions2">
+        <file name="continuous.py" />
+        <file name="diagonal_slices.py" />
+        <file name="dice.py" />
+        <file name="gauss_example_supplements.py" />
+        <file name="supplements.py" />
+      </directory>
+      <directory name="gauss_int">
+        <file name="herschel.py" />
+        <file name="integral.py" />
+        <file name="supplements.py" />
+      </directory>
+      <directory name="moser_reboot">
+        <file name="main.py" />
+      </directory>
+      <directory name="numberphile">
+        <file name="prime_race.py" />
+      </directory>
+      <directory name="optics_puzzles">
+        <file name="adding_waves.py" />
+        <file name="annotations.py" />
+        <file name="bending_waves.py" />
+        <file name="cylinder.py" />
+        <file name="driven_harmonic_oscillator.py" />
+        <file name="e_field.py" />
+        <file name="ior_annotations.py" />
+        <file name="objects.py" />
+        <file name="slowing_waves.py" />
+        <file name="slowing_waves_insert_embed.py" />
+        <file name="wave_machine.py" />
+      </directory>
+      <directory name="standup_maths">
+        <file name="basketball.py" />
+        <file name="pool.py" />
+      </directory>
+    </directory>
+    <directory name="_2024">
+      <directory name="antp">
+        <file name="main.py" />
+      </directory>
+      <directory name="holograms">
+        <file name="diffraction.py" />
+        <directory name="diffraction_shader">
+          <file name="frag.glsl" />
+          <file name="vert.glsl" />
+        </directory>
+        <file name="model.py" />
+        <file name="supplements.py" />
+      </directory>
+      <directory name="manim_demo">
+        <file name="lorenz.py" />
+      </directory>
+      <directory name="puzzles">
+        <file name="added_dimension.py" />
+        <file name="max_rand.py" />
+      </directory>
+      <directory name="transformers">
+        <file name="almost_orthogonal.py" />
+        <file name="attention.py" />
+        <file name="auto_regression.py" />
+        <file name="chm.py" />
+        <file name="embedding.py" />
+        <file name="generation.py" />
+        <file name="helpers.py" />
+        <file name="ml_basics.py" />
+        <file name="mlp.py" />
+        <file name="network_flow.py" />
+        <file name="supplements.py" />
+      </directory>
+    </directory>
+    <directory name="outside_videos">
+      <file name="aeoud.py" />
+      <file name="analysis.py" />
+      <file name="banners.py" />
+      <file name="for_site.py" />
+      <file name="geometry.py" />
+      <file name="gifs.py" />
+      <file name="grover.py" />
+      <file name="merch_designs.py" />
+      <file name="misc_thumbnails.py" />
+      <file name="mug_to_torus.py" />
+      <file name="name_animation.py" />
+      <file name="patterns.py" />
+      <file name="podcast.py" />
+      <file name="probability.py" />
+      <file name="qa_examples.py" />
+      <file name="short_links.py" />
+      <file name="talk_scenes.py" />
+      <directory name="tweets">
+        <file name="addition_anagram.py" />
+        <file name="door_puzzle.py" />
+        <file name="image_manipulation.py" />
+        <file name="powers_of_two.py" />
+        <file name="starry_night.py" />
+        <file name="sudanese_band.py" />
+      </directory>
+    </directory>
+    <file name="stage_scenes.py" />
+    <directory name="sublime_custom_commands">
+      <file name="ManimCheckpointPaste.sublime-commands" />
+      <file name="ManimExit.sublime-commands" />
+      <file name="ManimRecordedCheckpointPaste.sublime-commands" />
+      <file name="ManimRunScene.sublime-commands" />
+      <file name="ManimSkippedCheckpointPaste.sublime-commands" />
+      <file name="OpenMirroredDirectory.sublime-commands" />
+      <file name="manim_plugins.py" />
+    </directory>
+  </directory>
+</repository>

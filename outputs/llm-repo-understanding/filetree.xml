@@ -1,0 +1,16 @@
+<repository name="llm-repo-understanding">
+  <file name="LICENSE" />
+  <file name="README.md" />
+  <file name="enrich_filetree.py" />
+  <file name="generate_xml_filetree.py" />
+  <file name="get_input_tokens_info.py" />
+  <directory name="outputs">
+    <directory name="llm-repo-understanding">
+      <file name="filetree.xml" />
+    </directory>
+    <directory name="manim">
+      <file name="filetree.xml" />
+    </directory>
+  </directory>
+  <file name="requirements.txt" />
+</repository>
