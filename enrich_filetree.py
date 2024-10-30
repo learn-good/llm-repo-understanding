@@ -119,11 +119,13 @@ async def process_filetree(dir_element: ET.Element, current_dir: str, root_dir: 
 
 def enrich_filetree_element(element: ET.Element, current_dir: str, root_dir: str, mirror_base: str) -> None:
     """Recursively enrich the filetree by incorporating summaries"""
-    # TODO make sure ignore=true is respected, and also if the filetree.xml has parts deleted
-    # TODO make sure ignore=true is respected, and also if the filetree.xml has parts deleted
-    # TODO make sure ignore=true is respected, and also if the filetree.xml has parts deleted
     # Process files in the current directory
     for file_elem in element.findall('file'):
+        # Skip if file is marked as ignored
+        if file_elem.get('ignore', '').lower() == 'true':
+            element.remove(file_elem)
+            continue
+            
         filepath = os.path.join(current_dir, file_elem.get('name'))
         mirror_path = get_mirror_path(filepath, root_dir, mirror_base) + '.xml'
         
@@ -148,12 +150,17 @@ def enrich_filetree_element(element: ET.Element, current_dir: str, root_dir: str
                     
             except ET.ParseError as e:
                 log.error(f"Failed to parse summary XML for {filepath}: {e}")
-        # else:
-        #     ## TODO only complain about non-ignored files?
-        #     log.warning(f"Summary not found for {mirror_path}")
+        else:
+            if file_elem.get('text-readable', '').lower() != 'false':
+                log.warning(f"Summary not found for {filepath}")
     
     # Process subdirectories recursively
-    for subdir in element.findall('directory'):
+    for subdir in list(element.findall('directory')):  # Create a list to safely modify during iteration
+        # Skip if directory is marked as ignored
+        if subdir.get('ignore', '').lower() == 'true':
+            element.remove(subdir)
+            continue
+            
         subdir_path = os.path.join(current_dir, subdir.get('name'))
         enrich_filetree_element(subdir, subdir_path, root_dir, mirror_base)
 
@@ -189,7 +196,7 @@ async def main():
     
     # Parse the XML filetree
     tree = ET.parse(args.filetree_path)
-    root = tree.getroot()
+    ft_root = tree.getroot()
     
     # Get repo name and create mirrored output directory
     repo_name = os.path.basename(os.path.abspath(args.directory))
@@ -202,12 +209,11 @@ async def main():
     # Process the entire tree and generate summaries
     semaphore = asyncio.Semaphore(args.semaphore_size)
     root_dir = args.directory  # This is our reference point for all relative paths
-    await process_filetree(root, root_dir, root_dir, mirror_base, repo_name, 
+    await process_filetree(ft_root, root_dir, root_dir, mirror_base, repo_name, 
                            args.overwrite, semaphore)
     
     # Enrich the filetree with summaries
-    # TODO respect ignored and deleted filetree branches
-    enrich_filetree_element(root, root_dir, root_dir, mirror_base)
+    enrich_filetree_element(ft_root, root_dir, root_dir, mirror_base)
     
     # Save the enriched filetree
     output_path = os.path.join(mirror_base, 'enriched_filetree.xml')
@@ -216,7 +222,7 @@ async def main():
     
     # Count tokens in the enriched filetree
     encoding = tiktoken.get_encoding("o200k_base")
-    xml_string = ET.tostring(root, encoding='utf-8').decode('utf-8')
+    xml_string = ET.tostring(ft_root, encoding='utf-8').decode('utf-8')
     token_count = len(encoding.encode(xml_string))
     log.info(f"Token count of enriched filetree (o200k_base encoding): {token_count}")
 

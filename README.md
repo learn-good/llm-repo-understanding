@@ -4,7 +4,7 @@
   <img src="media/dandadan_sakata.png" alt="Alt text" width="400">
 </p>
 
-Currently, we are using LLMs to generate a compressed representation of the repo (an XML filetree with summary information), and using that as context for future prompts. The approach is crude and unrefined, but the hope is to eventually be able to make full walkthroughs, documentation, etc.
+Currently, we are using LLMs to generate a compressed representation of the repo (an XML filetree with summary information), and using that as context for future prompts. The approach is crude, limited, and more manual than I would like, but the hope is to eventually be able to make full walkthroughs, documentation, agential workflows that read entire files when necessary, etc.
 
 # How to use
 Make sure you have requirements installed (`pip install -r requirements.txt`)
@@ -99,7 +99,7 @@ Review the xmlft and remove or mark files you don't want analyzed. There are two
 
 This helps reduce inference costs by focusing on relevant content.
 
-## Step 4: Create summaries of files and directories and aggregate into enriched filetree
+## Step 4: Create summaries of files and aggregate into enriched filetree
 Run `python enrich_filetree.py -f path/to/filetree.xml -d path/to/input/directory` to generate XML summaries of files and stitch them together to form an enriched filetree. `enriched_filetree.xml` will be found in the output directory if specified with `-o`, or `outputs/{repo_name}/summaries/enriched_filetree.xml` by default.
 
 > [!NOTE] 
@@ -108,12 +108,15 @@ Run `python enrich_filetree.py -f path/to/filetree.xml -d path/to/input/director
 ## Step 5: Use the enriched filetree in your prompts 
 
 ## Limitations
-- Large repos may not be compressed enough, so you may have to manually a subset of the enriched filetree as context for prompts.
-- As with any LLM endeavour, there is hallucination risk, so summaries can be incorrect or incomplete.
+- Large repos will generate huge filetrees. You will have to process subdirectories of those repos.
+- This workflow still requires a lot of manual involvement from the user, e.g., for trimming the filetree.
+- As with any LLM endeavor, there is hallucination risk, so summaries can be incorrect or incomplete.
 - The LLM may produce summaries in a non-parsable format.
+- `request_chat_completion` uses the `AsyncAnthropic` client, and currently doesn't support anything else.
+- The XML indenting isn't always great, especially for python<3.9 and for the enriched filetree.
 
-## Community help
+## Would appreciate community feedback on:
 - Does using the enriched filetree in your prompts lead to better results?
 - Are there better alternative approaches to summarizing a repo? (better prompt variations, XML structure, etc.)
-- Is there a good way (prompting techniques, chains of prompts, etc.) to generate an effective human-readable walkthrough, guide, etc. for the repo?
+- Have you found a good way (prompting techniques, chains of prompts, etc.) to generate an effective human-readable walkthrough, guide, etc. for code repos?
 - Does adding working examples to the repo help, or is it unnecessary?
