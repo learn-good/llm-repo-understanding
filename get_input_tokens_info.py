@@ -72,7 +72,7 @@ def traverse_xml(element, current_path, stats, thresholds, encoding):
         # Warn if directory has many items
         total_direct_items = num_direct_files + num_direct_dirs
         if total_direct_items > thresholds['dir_items_threshold']:
-            log.warning(f"Directory '{dir_path}' has {total_direct_items} items (files/directories).")
+            log.warning(f"Directory '{dir_path}' has {total_direct_items} items (files/directories). Consider using the `--no-directory-summaries` flag when enriching filetree.")
 
         # Recursively traverse children
         for child in element:
@@ -167,7 +167,6 @@ def main():
     print("\nFile type distribution:")
     for file_type, count in sorted(stats['file_types'].items(), key=lambda x: x[1], reverse=True):
         print(f"  {file_type if file_type else '[no extension]'}: {count} files")
-    print(f"\nNote: The actual run will use likely a multiple of the input tokens (e.g. 10 * {stats['file_content_token_count']}) of the base files, since we are generating summaries of those files that will themselves become inputs into other summarization steps. We do not attempt to estimate the number of output tokens.")
 
 if __name__ == '__main__':
     main()

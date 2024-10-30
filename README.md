@@ -4,9 +4,7 @@
   <img src="media/dandadan_sakata.png" alt="Alt text" width="400">
 </p>
 
-This is an attempt at using LLMs to help understand a repo by performing a DFS-style traversal of a repository's filetree: leaf nodes (files) and subtrees are summarized prior to creating a summary of the parent. 
-
-After one pass enriching the file tree with relevant information, attempt to summarize the repo in either a "text" form, which will be structured markdown, or "speech" form, which can serve as input to a text-to-speech API or used to provide a textual narrative overview of the repo. 
+Currently, we are using LLMs to generate a compressed representation of the repo (an XML filetree with summary information), and using that as context for future prompts. The approach is crude and unrefined, but the hope is to eventually be able to make full walkthroughs, documentation, etc.
 
 # How to use
 Make sure you have requirements installed (`pip install -r requirements.txt`)
@@ -22,7 +20,7 @@ You can add example files to the target repository if:
 Run `python generate_xml_filetree.py -i repo_path` to create an XML filetree (xmlft) representation of your repository's file structure. It respects .gitignore patterns by default. 
 
 > [!TIP] 
-> Use `python generate_xml_filetree.py -h` for available options.
+> Use `python generate_xml_filetree.py -h` for available options. This works for the other scripts as well.
 
 #### Basic usage
 ```python
@@ -35,26 +33,27 @@ python generate_xml_filetree.py -i inputs/some_repo_name
 
 #### Example Output
 ```html
-<repository name="llm-repo-understanding">
-  <file name="LICENSE" />
+<repository name="manim">
+  <file name="LICENSE.md" />
+  <file name="MANIFEST.in" />
   <file name="README.md" />
-  <file name="enrich_filetree.py" />
-  <file name="generate_xml_filetree.py" />
-  <file name="get_input_tokens_info.py" />
-  <directory name="outputs">
-    <directory name="llm-repo-understanding">
-      <file name="filetree.xml" />
-    </directory>
-    <directory name="manim">
-      <file name="filetree.xml" />
-    </directory>
-  </directory>
-  <file name="requirements.txt" />
-</repository>
+  <directory name="docs">
+    <file name="Makefile" />
+    <file name="example.py" />
+    <file name="make.bat" />
+    <file name="requirements.txt" />
+    <directory name="source">
+      <file name="conf.py" />
+      <directory name="development">
+        <file name="about.rst" />
+        <file name="changelog.rst" ignore="true"/>
+        <file name="contributing.rst" />
+      </directory>
+...
 ```
 
 ## Step 3: Collect stats on, inspect, and edit your XML filetree
-Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the xmlft, such as token count (using `tiktoken` with `o200k_base` encoding), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the xmlft. It also ignores counts for non-text-readable files.
+Run `python get_input_tokens_info.py -f path/to/filetree -d path/to/repo_dir` to get information about the files in the xmlft, such as token count (using `tiktoken` with `o200k_base` encoding by default), file extension count, and other info about the distribution of files that will be summarized. Ignores files and directories with `ignore="true"` in the xmlft. It also ignores counts for non-text-readable files.
 
 Example output:
 ```
@@ -96,8 +95,25 @@ Review the xmlft and remove or mark files you don't want analyzed. There are two
    - Example: `<directory name="somedir" ignore="true">`
    - Ignored items won't be summarized individually by LLM
    - Ignored items will still appear in the overall repo structure
-   - `get_input_tokens_info.py` will skip ignored items
+   - Re-running `get_input_tokens_info.py` will skip ignored items
 
 This helps reduce inference costs by focusing on relevant content.
 
-## Step 4: Enrich the filetree with file and directory summaries
+## Step 4: Create summaries of files and directories and aggregate into enriched filetree
+Run `python enrich_filetree.py -f path/to/filetree.xml -d path/to/input/directory` to generate XML summaries of files and stitch them together to form an enriched filetree. `enriched_filetree.xml` will be found in the output directory if specified with `-o`, or `outputs/{repo_name}/summaries/enriched_filetree.xml` by default.
+
+> [!NOTE] 
+> This step sends async requests to generate summaries with a semaphore. Consult your provider's rate limits and send an appropriate semaphore size flag. The default size is set to 10.
+
+## Step 5: Use the enriched filetree in your prompts 
+
+## Limitations
+- Large repos may not be compressed enough, so you may have to manually a subset of the enriched filetree as context for prompts.
+- As with any LLM endeavour, there is hallucination risk, so summaries can be incorrect or incomplete.
+- The LLM may produce summaries in a non-parsable format.
+
+## Community help
+- Does using the enriched filetree in your prompts lead to better results?
+- Are there better alternative approaches to summarizing a repo? (better prompt variations, XML structure, etc.)
+- Is there a good way (prompting techniques, chains of prompts, etc.) to generate an effective human-readable walkthrough, guide, etc. for the repo?
+- Does adding working examples to the repo help, or is it unnecessary?

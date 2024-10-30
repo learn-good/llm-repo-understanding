@@ -4,6 +4,7 @@ from typing import List, Tuple, Optional, Dict
 import logging
 from custom_logging import get_logger_with_level
 import re
+import xml.etree.ElementTree as ET
 
 log = get_logger_with_level( logging.INFO ) # change logging level if the output is too verbose
 
@@ -64,3 +65,26 @@ def replace_placeholders(text: str, replacements: Dict[str, str]) -> str:
     for key, value in replacements.items():
         text = text.replace(key, value)
     return text
+
+def indent_xml_filetree(tree: ET.ElementTree, element: ET.Element, level: int = 0) -> None:
+    """
+    Recursively indent an XML ElementTree starting from the given element.
+    
+    Args:
+        tree: The ElementTree to indent
+        element: The current element being processed
+        level: The current indentation level
+    """
+    i = "\n" + level * "    "
+    if len(element):
+        if not element.text or not element.text.strip():
+            element.text = i + "    "
+        if not element.tail or not element.tail.strip():
+            element.tail = i
+        for subelement in element:
+            indent_xml_filetree(tree, subelement, level + 1)
+        if not element.tail or not element.tail.strip():
+            element.tail = i
+    else:
+        if level and (not element.tail or not element.tail.strip()):
+            element.tail = i

@@ -15,11 +15,9 @@
     <file name="dandadan_sakata.png" text-readable="false" />
   </directory>
   <directory name="outputs">
-    <directory name="llm-repo-understanding">
-      <file name="enriched_filetree.xml" />
-      <file name="filetree.xml" />
-    </directory>
+    <directory name="llm-repo-understanding" />
     <directory name="manim">
+      <file name="enriched_filetree.xml" />
       <file name="filetree.xml" />
     </directory>
   </directory>

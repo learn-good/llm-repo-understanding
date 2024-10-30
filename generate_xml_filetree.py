@@ -2,7 +2,7 @@
 import os
 import xml.etree.ElementTree as ET
 import fnmatch
-from utils import log
+from utils import log, indent_xml_filetree
 
 def parse_gitignore(gitignore_path):
     """
@@ -178,28 +178,8 @@ def generate_xml_tree(input_filepath=".", use_gitignore=True,
 
     # Indent filetree
     if not output_minified:
-        # Apply indentation for pretty printing
-        try:
-            # For Python 3.9 and above
-            ET.indent(xml_tree, space=' ' * output_indent, level=0)
-        except AttributeError:
-            # For older Python versions, define a custom indent function
-            def indent_elem(elem, level=0):
-                i = "\n" + level * (" " * output_indent)
-                j = "\n" + (level - 1) * (" " * output_indent)
-                if len(elem):
-                    if not elem.text or not elem.text.strip():
-                        elem.text = i + (" " * output_indent)
-                    for subelem in elem:
-                        indent_elem(subelem, level + 1)
-                    if not elem.tail or not elem.tail.strip():
-                        elem.tail = i
-                else:
-                    if level and (not elem.tail or not elem.tail.strip()):
-                        elem.tail = i
-            indent_elem(root_element)
-    # Minified output, remove any whitespace
-    else:
+        indent_xml_filetree(xml_tree, root_element, output_indent)
+    else: # Minified output, remove any whitespace
         pass  # No action needed, default output is minified
 
     # Check if user meant to overwrite

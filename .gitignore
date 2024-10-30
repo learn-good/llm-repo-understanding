@@ -4,5 +4,7 @@
 !/inputs/prompts
 !/inputs/prompts/*
 
+outputs/*/summaries
+
 .DS_Store
 __pycache__

@@ -9,12 +9,12 @@
     <file name="requirements.txt" />
     <directory name="source">
       <file name="conf.py" />
-      <directory name="development">
+      <directory name="development" ignore="true">
         <file name="about.rst" />
-        <file name="changelog.rst" ignore="true"/>
+        <file name="changelog.rst" />
         <file name="contributing.rst" />
       </directory>
-      <directory name="documentation">
+      <directory name="documentation" ignore="true">
         <directory name="animation">
           <file name="index.rst" />
         </directory>
@@ -36,7 +36,7 @@
           <file name="index.rst" />
         </directory>
       </directory>
-      <directory name="getting_started">
+      <directory name="getting_started" ignore="true">
         <file name="configuration.rst" />
         <file name="example_scenes.rst" />
         <file name="installation.rst" />
