@@ -115,8 +115,8 @@ Run `python enrich_filetree.py -f path/to/filetree.xml -d path/to/input/director
 - `request_chat_completion` uses the `AsyncAnthropic` client, and currently doesn't support anything else.
 - The XML indenting isn't always great, especially for python<3.9 and for the enriched filetree.
 
-## Would appreciate community feedback on:
+<!-- ## Would appreciate community feedback on:
 - Does using the enriched filetree in your prompts lead to better results?
 - Are there better alternative approaches to summarizing a repo? (better prompt variations, XML structure, etc.)
 - Have you found a good way (prompting techniques, chains of prompts, etc.) to generate an effective human-readable walkthrough, guide, etc. for code repos?
-- Does adding working examples to the repo help, or is it unnecessary?
+- Does adding working examples to the repo help, or is it unnecessary? -->
