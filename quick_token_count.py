@@ -1,3 +1,4 @@
+# get a quick token count on a text input file
 import argparse
 import tiktoken
 

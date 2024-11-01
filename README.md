@@ -9,8 +9,9 @@ Currently, we are using LLMs to generate a compressed representation of the repo
 # How to use
 Make sure you have requirements installed (`pip install -r requirements.txt`)
 
-## Step 1: Add Target Repository (Optional)
-Place the repository you want to analyze in `./inputs/{repo_name}`. Results will be saved to `./outputs/{repo_name}/` by default.
+## Step 1: Add Target Repository
+Place the repository you want to analyze in `./inputs/{repo_name}` (optional step). 
+Results will be saved to `./outputs/{repo_name}/` by default.
 
 You can add example files to the target repository if:
 - The repository lacks examples
@@ -115,8 +116,8 @@ Run `python enrich_filetree.py -f path/to/filetree.xml -d path/to/input/director
 - `request_chat_completion` uses the `AsyncAnthropic` client, and currently doesn't support anything else.
 - The XML indenting isn't always great, especially for python<3.9 and for the enriched filetree.
 
-<!-- ## Would appreciate community feedback on:
+## Feedback that would be helpful:
 - Does using the enriched filetree in your prompts lead to better results?
 - Are there better alternative approaches to summarizing a repo? (better prompt variations, XML structure, etc.)
 - Have you found a good way (prompting techniques, chains of prompts, etc.) to generate an effective human-readable walkthrough, guide, etc. for code repos?
-- Does adding working examples to the repo help, or is it unnecessary? -->
+- Does adding working examples to the repo help, or is it unnecessary?
